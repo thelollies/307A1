@@ -16,7 +16,7 @@ public class DecisionTreeClassifier {
 
 	private final Helper helperTraining;
 	private final Helper helperTesting;
-	private Node tree;
+	private final Node tree;
 
 	public DecisionTreeClassifier(String trainingFile, String testingFile){
 		// Instantiate helpers
@@ -25,18 +25,18 @@ public class DecisionTreeClassifier {
 		helperTesting = new Helper();
 		helperTesting.readDataFile(testingFile);
 
-		tree = constructTree();
+		tree = constructTree(helperTraining.allInstances, helperTraining.attNames);
 	}
 
-	private Node constructTree(){
-		if(helperTraining.allInstances.isEmpty())
+	private Node constructTree(List<Instance> instances, List<String> attributes){
+		if(instances.isEmpty())
 			return null; // return leaf with name of most probably class and it's prob (baseline predictor
-		if(pure(helperTraining.allInstances))
+		if(pure(instances))
 			return null; // leaf with name of all instances and prob 1
-		if(helperTraining.numAtts == 0) // TODO makes sense??
+		if(attributes.size() == 0) // TODO makes sense??
 			return null; // leaf containing name and prob of majority class (random choice if equal)
 
-		for(String attribute : helperTraining.attNames){
+		for(String attribute : attributes){
 			// seperate into two sets: ones where attr is false and ones where attr is true
 			// compute purity of each set
 			// if weighted average purity of sets is best so far:
