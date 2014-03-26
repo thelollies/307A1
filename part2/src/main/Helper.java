@@ -1,17 +1,18 @@
+package main;
 import java.util.*;
 import java.io.*;
 
-
+public class Helper{
 // some bits of java code that you may use if you wish.
 // assumes that the enclosing class has fields:
-//   int numCategories;
-//   int numAtts;
-//   List<String> categoryNames;
-//   List<String> attNames;
-//   List<Instance> allInstances;
+   int numCategories;
+   int numAtts;
+   List<String> categoryNames;
+   List<String> attNames;
+   List<Instance> allInstances;
 
 
-  private void readDataFile(String fname){
+  public void readDataFile(String fname){
     /* format of names file:
      * names of categories, separated by spaces
      * names of attributes
@@ -20,7 +21,7 @@ import java.io.*;
     System.out.println("Reading data from file "+fname);
     try {
       Scanner din = new Scanner(new File(fname));
-   
+
       categoryNames = new ArrayList<String>();
       for (Scanner s = new Scanner(din.nextLine()); s.hasNext();) categoryNames.add(s.next());
       numCategories=categoryNames.size();
@@ -30,7 +31,7 @@ import java.io.*;
       for (Scanner s = new Scanner(din.nextLine()); s.hasNext();) attNames.add(s.next());
       numAtts = attNames.size();
       System.out.println(numAtts +" attributes");
-      
+
       allInstances = readInstances(din);
       din.close();
     }
@@ -44,7 +45,7 @@ import java.io.*;
     /* instance = classname and space separated attribute values */
     List<Instance> instances = new ArrayList<Instance>();
     String ln;
-    while (din.hasNext()){ 
+    while (din.hasNext()){
       Scanner line = new Scanner(din.nextLine());
       instances.add(new Instance(categoryNames.indexOf(line.next()),line));
     }
@@ -53,8 +54,8 @@ import java.io.*;
   }
 
 
- 
-  private class Instance {
+
+  public class Instance {
 
     private int category;
     private List<Boolean> vals;
@@ -72,7 +73,7 @@ import java.io.*;
     public int getCategory(){
       return category;
     }
-    
+
     public String toString(){
       StringBuilder ans = new StringBuilder(categoryNames.get(category));
       ans.append(" ");
@@ -80,5 +81,6 @@ import java.io.*;
 	ans.append(val?"true  ":"false ");
       return ans.toString();
     }
-    
+
   }
+}
