@@ -1,9 +1,16 @@
 package datastructures;
 
 public class Leaf implements Node {
-	private String attribute;
+	public final int category;
+	public final double probability;
 
-	public Leaf(String attribute){
-		this.attribute = attribute;
+	public Leaf(int category, double probability){
+		this.category = category;
+		this.probability = probability;
+	}
+	
+	@Override
+	public String toString() {
+		return "Leaf: " + category + " " + probability;
 	}
 }
