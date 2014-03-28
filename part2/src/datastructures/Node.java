@@ -1,5 +1,7 @@
 package datastructures;
 
-public interface Node {
+import main.Helper;
 
+public interface Node {
+	public String show(Helper h);
 }

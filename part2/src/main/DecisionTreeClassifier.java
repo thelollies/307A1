@@ -33,23 +33,24 @@ public class DecisionTreeClassifier {
 		tree = constructTree(helperTraining.allInstances, helperTraining.attNames);
 	}
 
+	// TODO fix this to print the name of the node then true or false
 	private void printTree(Node tree, int indent) {
 		for(int i = 0; i < indent; i++) System.out.printf(" ");
-		System.out.println(tree);
+		System.out.println(tree.show(helperTraining));
 		if(tree instanceof InnerNode){
 			InnerNode inner = (InnerNode) tree;
 			printTree(inner.left, ++indent);
 			printTree(inner.right, ++indent);
 		}
 	}
-	
+
 	public void printTree(){
 		printTree(tree, 0);
 	}
 
 	private Node constructTree(List<Instance> instances, List<String> attributes){
 		if(instances.isEmpty()) // return leaf with name of most probable class and it's prob (baseline predictor)
-			return new Leaf(helperTraining.mostCommonCategory, 
+			return new Leaf(helperTraining.mostCommonCategory,
 					helperTraining.mostCommonCatCount / helperTraining.allInstances.size());
 		if(homogeneous(instances))
 			return new Leaf(instances.get(0).getCategory(), 1); // leaf with category of all instances and prob 1
@@ -62,7 +63,7 @@ public class DecisionTreeClassifier {
 				else
 					modeMap.put(inst.getCategory(), 1);
 			}
-			
+
 			// Extract mode instance
 			int mode = 0;
 			int modeCount = 0;
@@ -74,7 +75,7 @@ public class DecisionTreeClassifier {
 			}
 
 			// leaf containing name and prob of majority class (random choice if equal)
-			return new Leaf(mode, (double)modeCount / instances.size()); 
+			return new Leaf(mode, (double)modeCount / instances.size());
 		}
 
 		double bestPurity = Double.POSITIVE_INFINITY;
@@ -94,7 +95,7 @@ public class DecisionTreeClassifier {
 			double falsePurity = purity(falseSet);
 
 			// calculate weighted average purity of the set
-			double weightedPurity = (truePurity * (trueSet.size() / instances.size())) + 
+			double weightedPurity = (truePurity * (trueSet.size() / instances.size())) +
 					(falsePurity * (falseSet.size() / instances.size()));
 
 			// if weighted average purity of sets is best so far record it
@@ -104,7 +105,7 @@ public class DecisionTreeClassifier {
 				bestFalseSet = falseSet;
 			}
 		}
-		// Remove the selected attribute from the attribute set 
+		// Remove the selected attribute from the attribute set
 		attributes = new ArrayList<String>(attributes);
 		attributes.remove(bestAttrIndex);
 
@@ -131,7 +132,7 @@ public class DecisionTreeClassifier {
 		}
 		return (aliveCount / instances.size()) * (deadCount / instances.size());
 	}
-	
+
 	/**
 	 * Small helper class to determine if all the instances are of the same category
 	 * @param instances
@@ -142,35 +143,46 @@ public class DecisionTreeClassifier {
 		for(int i = 1; i < instances.size(); i++)
 			if(instances.get(i).getCategory() != firstCategory)
 				return false;
-	
+
 		return true;
 	}
-	
+
 	/**
-	 * Runs each testing instance through the constructed decision tree and 
+	 * Runs each testing instance through the constructed decision tree and
 	 * print the results.
 	 */
 	public void test(){
 		int count = 0;
 		int correct = 0;
+		int countLive = 0;
+		int countDead = 0;
+		int correctLive = 0;
+		int correctDead = 0;
 		for(Instance testInst : helperTesting.allInstances){
 			count++;
-			if(evaluateInstance(testInst, tree) == testInst.getCategory())
+			countLive += testInst.getCategory() == 0 ? 1 : 0;
+			countDead += testInst.getCategory() == 1 ? 1 : 0;
+
+			if(evaluateInstance(testInst, tree) == testInst.getCategory()){
+				correctLive += testInst.getCategory() == 0 ? 1 : 0;
+				correctDead += testInst.getCategory() == 1 ? 1 : 0;
 				correct++;
+			}
 		}
 		System.out.printf("%d/%d = %.2f%%\n", correct, count, 100*(double)correct/count);
+		System.out.printf("Live: %d/%d = %.2f%%\n", correctLive, countLive, (double)correctLive / countLive);
+		System.out.printf("Die: %d/%d = %.2f%%\n", correctDead, countDead, (double)correctDead / countDead);
 	}
-	
+
 	private int evaluateInstance(Instance instance, Node tree){
 		if(tree instanceof Leaf)
 			return ((Leaf)tree).category;
+
 		InnerNode inner = (InnerNode)tree;
 		if(instance.getAtt(inner.attribute))
 			return evaluateInstance(instance, inner.left);
-		
+
 		return evaluateInstance(instance, inner.right);
-					
-		
 	}
 
 	public static void main(String[] args){

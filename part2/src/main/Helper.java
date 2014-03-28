@@ -7,8 +7,8 @@ public class Helper{
 	// assumes that the enclosing class has fields:
 	int numCategories;
 	int numAtts;
-	List<String> categoryNames;
-	List<String> attNames;
+	public List<String> categoryNames;
+	public List<String> attNames;
 	List<Instance> allInstances;
 	int mostCommonCategory = 0;
 	double mostCommonCatCount = 0;
@@ -64,8 +64,12 @@ public class Helper{
 			}
 		}
 
-		System.out.println("Read " + instances.size()+" instances, most common category: "
-				+ categoryNames.get(mostCommonCategory) + "(" + mostCommonCatCount + ")");
+		System.out.printf("Read %d instances, base case: %s (%.0f/%d %.2f%%)\n",
+				instances.size(),
+				categoryNames.get(mostCommonCategory),
+				mostCommonCatCount,
+				instances.size(),
+				100 * mostCommonCatCount / instances.size());
 		return instances;
 	}
 

@@ -1,5 +1,7 @@
 package datastructures;
 
+import main.Helper;
+
 public class Leaf implements Node {
 	public final int category;
 	public final double probability;
@@ -8,9 +10,14 @@ public class Leaf implements Node {
 		this.category = category;
 		this.probability = probability;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Leaf: " + category + " " + probability;
+	}
+
+	@Override
+	public String show(Helper h) {
+		return "Leaf: " + h.categoryNames.get(category) + " " + probability;
 	}
 }
