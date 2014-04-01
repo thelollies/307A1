@@ -72,6 +72,11 @@ public class DecisionTreeClassifier {
 					modeCount = entry.getValue();
 					mode = entry.getKey();
 				}
+				// Randomly decide between modes of same count
+				else if(entry.getValue() == modeCount && Math.random() > 0.5){
+					modeCount = entry.getValue();
+					mode = entry.getKey();
+				}
 			}
 
 			// leaf containing name and prob of majority class (random choice if equal)
@@ -81,13 +86,13 @@ public class DecisionTreeClassifier {
 		double bestPurity = Double.MAX_VALUE;
 		List<Instance> bestTrueSet = new ArrayList<Instance>();
 		List<Instance> bestFalseSet = new ArrayList<Instance>();
-		int bestAttrIndex = -1;
+		String bestAttr = "";
 		for(int i = 0; i < attributes.size(); i++){
 			// separate into two sets: ones where attr is false and ones where attr is true
 			List<Instance> trueSet = new ArrayList<Instance>();
 			List<Instance> falseSet = new ArrayList<Instance>();
 			for(Instance inst : instances){
-				if(inst.getAtt(i)) trueSet.add(inst);
+				if(inst.getAtt(helperTraining.attNames.indexOf(attributes.get(i)))) trueSet.add(inst);
 				else falseSet.add(inst);
 			}
 			// compute purity of each set
@@ -100,7 +105,7 @@ public class DecisionTreeClassifier {
 
 			// if weighted average purity of sets is best so far record it
 			if(weightedPurity < bestPurity){
-				bestAttrIndex = i;
+				bestAttr = attributes.get(i);
 				bestTrueSet = trueSet;
 				bestFalseSet = falseSet;
 				bestPurity = weightedPurity;
@@ -108,14 +113,15 @@ public class DecisionTreeClassifier {
 		}
 		// Remove the selected attribute from the attribute set
 		attributes = new ArrayList<String>(attributes);
-		attributes.remove(bestAttrIndex);
+		if(!attributes.remove(bestAttr))
+			System.err.println("Could not find selected attribute in attribute list");
 
 		// build subtree using remaining attributes
 		Node left = constructTree(bestTrueSet, attributes);
 		Node right = constructTree(bestFalseSet, attributes);
 
 		// return a new node (best attr, left, right)
-		return new InnerNode(bestAttrIndex, left, right);
+		return new InnerNode(helperTraining.attNames.indexOf(bestAttr), left, right);
 	}
 
 	/**
