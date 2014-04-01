@@ -78,10 +78,10 @@ public class DecisionTreeClassifier {
 			return new Leaf(mode, (double)modeCount / instances.size());
 		}
 
-		double bestPurity = Double.POSITIVE_INFINITY;
+		double bestPurity = Double.MAX_VALUE;
 		List<Instance> bestTrueSet = new ArrayList<Instance>();
 		List<Instance> bestFalseSet = new ArrayList<Instance>();
-		int bestAttrIndex = 0;
+		int bestAttrIndex = -1;
 		for(int i = 0; i < attributes.size(); i++){
 			// separate into two sets: ones where attr is false and ones where attr is true
 			List<Instance> trueSet = new ArrayList<Instance>();
@@ -125,13 +125,14 @@ public class DecisionTreeClassifier {
 	 * @return
 	 */
 	private double purity(List<Instance> instances){
+		if(instances.size() == 0) return 0;
 		double aliveCount = 0;
 		double deadCount = 0;
 		for(int i = 0; i < instances.size(); i++){
 			if(instances.get(i).getCategory() == 0) aliveCount++;
 			else deadCount++;
 		}
-		return (aliveCount / instances.size()) * (deadCount / instances.size());
+		return ((double)aliveCount / instances.size()) * ((double)deadCount / instances.size());
 	}
 
 	/**
