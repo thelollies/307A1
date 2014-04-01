@@ -5,7 +5,7 @@ import java.util.List;
 public class PBM {
 	public final String comment;
 	public final boolean[][] image;
-	private boolean[] featureValues;
+	private int[] featureValues;
 	
 	public PBM(String comment, int width, int height, String data){
 		this.comment = comment;
@@ -21,21 +21,25 @@ public class PBM {
 	}
 
 	public void determineFeatureValues(List<Feature> featureList){
-		featureValues = new boolean[featureList.size()];
+		featureValues = new int[featureList.size()];
 		for(int i = 0; i < featureList.size(); i++)
 			featureValues[i] = testFeature(featureList.get(i));
 	}
 	
-	public boolean testFeature(Feature f) {
+	public int testFeature(Feature f) {
 
-		if(f.dummy) return true;
+		if(f.dummy) return 1;
 		
 		int sum=0;
 		
 		for(int i=0; i < 4; i++)
 			if (image[f.row[i]][f.col[i]]==f.sgn[i]) sum++;
 		
-		return (sum >= 3) ? true : false;
+		return (sum >= 3) ? 1 : 0;
+	}
+	
+	public int[] featureValues(){
+		return featureValues;
 	}
 
 	@Override

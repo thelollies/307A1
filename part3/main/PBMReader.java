@@ -40,16 +40,36 @@ public class PBMReader {
 			e.printStackTrace();
 		}
 
+		int numFeatures = 250;
+		
 		// Generate the feature list (50 including dummy feature)
-		List<Feature> featureList = new ArrayList<Feature>(50);
+		List<Feature> featureList = new ArrayList<Feature>(numFeatures);
 		featureList.add(Feature.dummy()); // Dummy feature always evaluates to true on comparison
-		for(int i = 0; i < 49; i++)
+		for(int i = 0; i < numFeatures - 1; i++)
 			featureList.add(new Feature(10,10));
 
 		for(PBM pbm : pbmList)
 			pbm.determineFeatureValues(featureList);
+
+		Perceptron perceptron = new Perceptron(numFeatures, 0);
+
+		boolean success = false;
+		double accuracy = 0;
+		int i;
+		for(i = 0; i < 100; i++){
+			if((accuracy = perceptron.learnPBMs(pbmList)) == 1 && 
+					(accuracy = perceptron.evaluatePBMs(pbmList)) == 1)
+			{
+				success = true;
+				break;
+			}
+		}
 		
-		System.out.println("Done");
+		if(success)
+			System.out.printf("Achieved 100%% correctness after %d iterations\n", i);
+		else
+			System.out.printf("%.2f%% accuracy, stopped after %d iterations\n",
+					100*accuracy, i);
 	}
 
 }
