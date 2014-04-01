@@ -45,7 +45,7 @@ public class DecisionTreeClassifier {
 	}
 
 	public void printTree(){
-		printTree(tree, 0);
+		tree.report("", helperTraining.categoryNames, helperTraining.attNames);
 	}
 
 	private Node constructTree(List<Instance> instances, List<String> attributes){
@@ -83,7 +83,7 @@ public class DecisionTreeClassifier {
 		List<Instance> bestFalseSet = new ArrayList<Instance>();
 		int bestAttrIndex = 0;
 		for(int i = 0; i < attributes.size(); i++){
-			// seperate into two sets: ones where attr is false and ones where attr is true
+			// separate into two sets: ones where attr is false and ones where attr is true
 			List<Instance> trueSet = new ArrayList<Instance>();
 			List<Instance> falseSet = new ArrayList<Instance>();
 			for(Instance inst : instances){
@@ -95,14 +95,15 @@ public class DecisionTreeClassifier {
 			double falsePurity = purity(falseSet);
 
 			// calculate weighted average purity of the set
-			double weightedPurity = (truePurity * (trueSet.size() / instances.size())) +
-					(falsePurity * (falseSet.size() / instances.size()));
+			double weightedPurity = (truePurity * ((double)trueSet.size() / instances.size())) +
+					(falsePurity * ((double)falseSet.size() / instances.size()));
 
 			// if weighted average purity of sets is best so far record it
 			if(weightedPurity < bestPurity){
 				bestAttrIndex = i;
 				bestTrueSet = trueSet;
 				bestFalseSet = falseSet;
+				bestPurity = weightedPurity;
 			}
 		}
 		// Remove the selected attribute from the attribute set
@@ -169,9 +170,10 @@ public class DecisionTreeClassifier {
 				correct++;
 			}
 		}
-		System.out.printf("%d/%d = %.2f%%\n", correct, count, 100*(double)correct/count);
-		System.out.printf("Live: %d/%d = %.2f%%\n", correctLive, countLive, (double)correctLive / countLive);
-		System.out.printf("Die: %d/%d = %.2f%%\n", correctDead, countDead, (double)correctDead / countDead);
+		System.out.println("\nTest Results:");
+		System.out.printf("Overall: %d/%d = %.2f%%\n", correct, count, 100*(double)correct/count);
+		System.out.printf("Live: %d/%d = %.2f%%\n", correctLive, countLive, 100*(double)correctLive / countLive);
+		System.out.printf("Die: %d/%d = %.2f%%\n", correctDead, countDead, 100*(double)correctDead / countDead);
 	}
 
 	private int evaluateInstance(Instance instance, Node tree){
@@ -192,7 +194,7 @@ public class DecisionTreeClassifier {
 			return;
 		}
 
-		new DecisionTreeClassifier(args[0], args[1]).test();
+		new DecisionTreeClassifier(args[0], args[1]).printTree();
 	}
 
 }

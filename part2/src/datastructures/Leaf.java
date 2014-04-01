@@ -1,5 +1,7 @@
 package datastructures;
 
+import java.util.List;
+
 import main.Helper;
 
 public class Leaf implements Node {
@@ -19,5 +21,11 @@ public class Leaf implements Node {
 	@Override
 	public String show(Helper h) {
 		return "Leaf: " + h.categoryNames.get(category) + " " + probability;
+	}
+
+	@Override
+	public void report(String indent, List<String> categoryNames, List<String> attributeNames) {
+			System.out.format("%sClass %s, prob=%4.2f\n",
+					indent, categoryNames.get(category), probability);
 	}
 }
