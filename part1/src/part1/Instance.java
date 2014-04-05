@@ -40,5 +40,34 @@ public class Instance {
 
 		return distance;
 	}
+
+	public double distanceTo(double[] attributeValues, double[] range){
+		// Ensure the instances have the same number of attributes
+		if(attributeValues.length != attributes.length) 
+			throw new InvalidParameterException("Instance attribute counts do not match.");
+
+		// Ensure the number of ranges matches the number of attributes
+		if(range.length != attributes.length)
+			throw new InvalidParameterException("Number of ranges does not match number of attributes.");
+
+		// Determines the distance between the instances using weighted Euclidean distance
+		double distance = 0.0;
+		for(int i = 0; i < this.attributes.length; i++)
+			distance += Math.pow((attributes[i] - attributeValues[i]), 2) / Math.pow(range[i], 2);
+
+		return distance;
+	}
 	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		for(int i = 0; i < attributes.length; i++){
+			sb.append(attributes[i]);
+			if(i < attributes.length - 1) sb.append(", ");
+		}
+		sb.append("] - " + classification);
+		return sb.toString();
+	}
+
 }

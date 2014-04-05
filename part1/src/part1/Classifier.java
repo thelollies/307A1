@@ -23,23 +23,23 @@ public class Classifier {
 
 		// Set the number of neighbors
 		this.k = k;
-		
+
 		// Read the trainingSet file into memory
 		List<String> trainingLines = Files.readAllLines(trainingSet, StandardCharsets.UTF_8);
-		
+
 		// Determine the number of attributes per instance
 		numAttrs = trainingLines.get(0).split("\\s+").length - 1; //TODO catch null pointer if empty
-		
+
 		// Create arrays for calculating attribute ranges
 		double[] min = new double[numAttrs];
 		double[] max = new double[numAttrs];
-		
+
 		// Initialise the min & max arrays
 		for(int i = 0; i > numAttrs; i++){
 			min[i] = Double.POSITIVE_INFINITY;
 			max[i] = Double.NEGATIVE_INFINITY;
 		}
-		
+
 		this.trainingSet = new ArrayList<Instance>();
 
 		// Extract the instances
@@ -48,7 +48,7 @@ public class Classifier {
 			Instance inst = new Instance(line);
 			this.trainingSet.add(inst);
 
-			
+
 			// Update the min and max for each attribute
 			double[] attrs = inst.attributes;
 			for(int i = 0; i < numAttrs; i++){
@@ -56,12 +56,12 @@ public class Classifier {
 				max[i] = attrs[i] > max[i] ? attrs[i] : max[i];
 			}
 		}
-		
+
 		// Calculate the attribute ranges from the min's and max's
 		double[] tempRanges = new double[numAttrs];
 		for(int i = 0; i < numAttrs; i++) tempRanges[i] = max[i] - min[i];
 		ranges = tempRanges;
-		
+
 		// Read the testSet file into memory
 		List<String> testLines = Files.readAllLines(testSet, StandardCharsets.UTF_8);
 		this.testSet = new ArrayList<Instance>();
@@ -69,11 +69,11 @@ public class Classifier {
 			if(line.matches("^\\s*$")) continue;
 			this.testSet.add(new Instance(line));
 		}
-		
+
 	}
-	
+
 	public String classify(){
-		
+
 		// String for delivering results
 		StringBuilder results = new StringBuilder("Results:\n");
 		double correct = 0;
@@ -84,21 +84,21 @@ public class Classifier {
 			// Order a copy of trainingSet by distance to test instance
 			Instance[] trainingArray = trainingSet.toArray(new Instance[trainingSet.size()]);
 			Arrays.sort(trainingArray, new InstanceComparator(testInst, ranges));
-			
+
 			// Create a map of Classification -> count of first k neighbours
 			Map<String, Integer> classMap = new HashMap<String, Integer>();
 			for(int i = 0; i < k; i++){
 				String classification = trainingArray[i].classification;
-				
+
 				// Add the class to the map if it isn't in there, otherwise increment
 				// its count
 				if(classMap.get(classification) == null)
 					classMap.put(classification, 1);
 				else
 					classMap.put(classification, classMap.get(classification) + 1);
-				
+
 			}
-			
+
 			// Determine the most-chosen 'nearest neighbor'
 			String chosenClass = "";
 			int classCount = 0;
@@ -108,19 +108,19 @@ public class Classifier {
 					chosenClass = entry.getKey();
 				}
 			}
-			
+
 			// Increment counters
 			total++;
 			if(testInst.classification.equals(chosenClass)) correct++;
-			
+
 			// Record result
 			results.append(String.format("Classified %s as %s \n",testInst.classification, chosenClass));
 		}
-		
+
 		results.append(String.format("%.0f/%.0f = %.2f%% correct\n", correct, total, (100*correct)/total));
 		return results.toString();
 	}
-	
+
 	/**
 	 * A comparator for Instances which orders instances
 	 * based on their distance to the instance provided in the constructor.
@@ -131,17 +131,17 @@ public class Classifier {
 
 		private final Instance compInstance;
 		private final double[] range;
-		
+
 		public InstanceComparator(Instance compInstance, double[] range){
 			this.compInstance = compInstance;
 			this.range = range;
 		}
-		
+
 		@Override
 		public int compare(Instance arg0, Instance arg1) {
 			return compInstance.distanceTo(arg0, range).compareTo(compInstance.distanceTo(arg1, range));
 		}
-		
+
 	}
 
 	public static void main(String[] args){
@@ -150,6 +150,16 @@ public class Classifier {
 		if(args.length < 2 || args[0] == null || args[1] == null){
 			System.err.println("Insufficient arguments, should have a training set name and a test set name.");
 			return;
+		}
+
+		// Run clustering instead
+		if(args[1].equals("--cluster")){
+			try{
+				new Clusterer(Paths.get(args[0]));
+				return;
+			}catch(IOException e){
+				System.err.println("Could not parse data file (or the file does not exist).");
+			}
 		}
 
 		// File variables
@@ -165,7 +175,7 @@ public class Classifier {
 					+ "format which led to the following error:");
 			e.printStackTrace();
 		}
-		
+
 	}
 
 }
