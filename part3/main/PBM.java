@@ -3,12 +3,12 @@ package main;
 import java.util.List;
 
 public class PBM {
-	public final String comment;
+	public final boolean positiveExample;
 	public final boolean[][] image;
 	private int[] featureValues;
 	
 	public PBM(String comment, int width, int height, String data){
-		this.comment = comment;
+		positiveExample = comment.equals("#Yes");
 		boolean[][] temp = new boolean[height][width];
 
 		char[] charArray = data.toCharArray();
@@ -20,10 +20,10 @@ public class PBM {
 		this.image = temp;
 	}
 
-	public void determineFeatureValues(List<Feature> featureList){
-		featureValues = new int[featureList.size()];
-		for(int i = 0; i < featureList.size(); i++)
-			featureValues[i] = testFeature(featureList.get(i));
+	public void determineFeatureValues(Feature[] featureList){
+		featureValues = new int[featureList.length];
+		for(int i = 0; i < featureList.length; i++)
+			featureValues[i] = testFeature(featureList[i]);
 	}
 	
 	public int testFeature(Feature f) {
@@ -44,7 +44,7 @@ public class PBM {
 
 	@Override
 	public String toString() {
-		StringBuilder str = new StringBuilder(comment + "\n");
+		StringBuilder str = new StringBuilder((positiveExample == true ? "#Yes" : "#other") + "\n");
 		for(int row = 0; row < image.length; row++){
 			for(int col = 0; col < image[0].length; col++)
 				str.append(image[row][col]);

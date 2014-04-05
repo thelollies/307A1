@@ -42,17 +42,10 @@ public class PBMReader {
 
 		int numFeatures = 250;
 		
-		// Generate the feature list (50 including dummy feature)
-		List<Feature> featureList = new ArrayList<Feature>(numFeatures);
-		featureList.add(Feature.dummy()); // Dummy feature always evaluates to true on comparison
-		for(int i = 0; i < numFeatures - 1; i++)
-			featureList.add(new Feature(10,10));
-
-		for(PBM pbm : pbmList)
-			pbm.determineFeatureValues(featureList);
-
 		Perceptron perceptron = new Perceptron(numFeatures, 0);
 
+		perceptron.preprocess(pbmList);
+		
 		boolean success = false;
 		double accuracy = 0;
 		int i;

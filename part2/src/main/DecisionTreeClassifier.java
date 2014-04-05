@@ -33,17 +33,6 @@ public class DecisionTreeClassifier {
 		tree = constructTree(helperTraining.allInstances, helperTraining.attNames);
 	}
 
-	// TODO fix this to print the name of the node then true or false
-	private void printTree(Node tree, int indent) {
-		for(int i = 0; i < indent; i++) System.out.printf(" ");
-		System.out.println(tree.show(helperTraining));
-		if(tree instanceof InnerNode){
-			InnerNode inner = (InnerNode) tree;
-			printTree(inner.left, ++indent);
-			printTree(inner.right, ++indent);
-		}
-	}
-
 	public void printTree(){
 		tree.report("", helperTraining.categoryNames, helperTraining.attNames);
 	}
@@ -91,6 +80,8 @@ public class DecisionTreeClassifier {
 			// separate into two sets: ones where attr is false and ones where attr is true
 			List<Instance> trueSet = new ArrayList<Instance>();
 			List<Instance> falseSet = new ArrayList<Instance>();
+			
+			
 			for(Instance inst : instances){
 				if(inst.getAtt(helperTraining.attNames.indexOf(attributes.get(i)))) trueSet.add(inst);
 				else falseSet.add(inst);
@@ -201,7 +192,9 @@ public class DecisionTreeClassifier {
 			return;
 		}
 
-		new DecisionTreeClassifier(args[0], args[1]).printTree();
+		DecisionTreeClassifier dfc = new DecisionTreeClassifier(args[0], args[1]);
+		dfc.printTree();
+		//dfc.test();
 	}
 
 }
