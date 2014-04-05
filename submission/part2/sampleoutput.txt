@@ -1,0 +1,77 @@
+Reading data from file hepatitis-training.dat
+2 categories
+16 attributes
+Read 110 instances, base case: live (88/110 80.00%)
+Reading data from file hepatitis-test.dat
+2 categories
+16 attributes
+Read 27 instances, base case: live (23/27 85.19%)
+
+Test Results:
+Overall: 21/27 = 77.78%
+Live: 19/23 = 82.61%
+Die: 2/4 = 50.00%
+ASCITES = True:
+ SPIDERS = True:
+  VARICES = True:
+   FIRMLIVER = True:
+    Class live, prob=1.00
+   FIRMLIVER = False:
+    BIGLIVER = True:
+     STEROID = True:
+      Class live, prob=1.00
+     STEROID = False:
+      FEMALE = True:
+       Class live, prob=1.00
+      FEMALE = False:
+       ANTIVIRALS = True:
+        FATIGUE = True:
+         Class die, prob=1.00
+        FATIGUE = False:
+         Class live, prob=1.00
+       ANTIVIRALS = False:
+        Class die, prob=1.00
+    BIGLIVER = False:
+     Class live, prob=1.00
+  VARICES = False:
+   Class die, prob=1.00
+ SPIDERS = False:
+  FIRMLIVER = True:
+   AGE = True:
+    Class live, prob=1.00
+   AGE = False:
+    SGOT = True:
+     Class live, prob=1.00
+    SGOT = False:
+     ANTIVIRALS = True:
+      Class die, prob=1.00
+     ANTIVIRALS = False:
+      STEROID = True:
+       Class live, prob=1.00
+      STEROID = False:
+       Class die, prob=1.00
+  FIRMLIVER = False:
+   SGOT = True:
+    BIGLIVER = True:
+     SPLEENPALPABLE = True:
+      Class live, prob=1.00
+     SPLEENPALPABLE = False:
+      ANOREXIA = True:
+       Class die, prob=1.00
+      ANOREXIA = False:
+       Class live, prob=1.00
+    BIGLIVER = False:
+     Class die, prob=1.00
+   SGOT = False:
+    Class live, prob=1.00
+ASCITES = False:
+ BIGLIVER = True:
+  STEROID = True:
+   Class die, prob=1.00
+  STEROID = False:
+   ANOREXIA = True:
+    Class die, prob=1.00
+   ANOREXIA = False:
+    Class live, prob=1.00
+ BIGLIVER = False:
+  Class live, prob=1.00

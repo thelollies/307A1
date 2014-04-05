@@ -49,7 +49,7 @@ public class PBMReader {
 		boolean success = false;
 		double accuracy = 0;
 		int i;
-		for(i = 100; i < 1; i++){
+		for(i = 0; i < 100; i++){
 			if((accuracy = perceptron.learnPBMs(pbmList)) == 1 && 
 					(accuracy = perceptron.evaluatePBMs(pbmList)) == 1)
 			{
@@ -72,9 +72,9 @@ public class PBMReader {
 		
 		
 		if(success)
-			System.out.printf("Achieved 100%% correctness after %d iterations\n", i);
+			System.out.printf("\nAchieved 100%% correctness after %d iterations\n", i);
 		else
-			System.out.printf("%.2f%% accuracy, stopped after %d iterations\n",
+			System.out.printf("\n%.2f%% accuracy, stopped after %d iterations\n",
 					100*accuracy, i);
 	}
 
