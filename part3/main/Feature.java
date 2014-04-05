@@ -43,4 +43,17 @@ public class Feature {
 		return new Feature();
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		for(int i = 0; i < row.length; i++){
+			sb.append("("+row[i]+","+col[i]+")");
+			if(i < row.length - 1) sb.append(", ");
+		}
+		sb.append(']');
+		if(dummy) sb.append(" - dummy feature");
+		return sb.toString();
+	}
+	
 }

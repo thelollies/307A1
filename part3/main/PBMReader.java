@@ -40,7 +40,7 @@ public class PBMReader {
 			e.printStackTrace();
 		}
 
-		int numFeatures = 250;
+		int numFeatures = 50;
 		
 		Perceptron perceptron = new Perceptron(numFeatures, 0);
 
@@ -49,7 +49,7 @@ public class PBMReader {
 		boolean success = false;
 		double accuracy = 0;
 		int i;
-		for(i = 0; i < 100; i++){
+		for(i = 100; i < 1; i++){
 			if((accuracy = perceptron.learnPBMs(pbmList)) == 1 && 
 					(accuracy = perceptron.evaluatePBMs(pbmList)) == 1)
 			{
@@ -57,6 +57,19 @@ public class PBMReader {
 				break;
 			}
 		}
+		
+		System.out.println("Features selected:");
+		for(Feature f : perceptron.getFeatures())
+			System.out.println(f);
+		
+		System.out.printf("Final weights used:\n[");
+		for(int j = 0; j < perceptron.getWeights().length; j++){
+			System.out.printf("%d",perceptron.getWeights()[j]);
+			if(j < perceptron.getWeights().length - 1)
+				System.out.printf(", ");
+		}
+		System.out.println("]");
+		
 		
 		if(success)
 			System.out.printf("Achieved 100%% correctness after %d iterations\n", i);

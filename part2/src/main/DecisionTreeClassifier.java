@@ -193,8 +193,8 @@ public class DecisionTreeClassifier {
 		}
 
 		DecisionTreeClassifier dfc = new DecisionTreeClassifier(args[0], args[1]);
+		dfc.test();
 		dfc.printTree();
-		//dfc.test();
 	}
 
 }

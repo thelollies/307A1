@@ -80,5 +80,9 @@ public class Perceptron {
 		for(PBM pbm : pbmList)
 			pbm.determineFeatureValues(features);
 	}
+	
+	public Feature[] getFeatures(){
+		return features;
+	}
 
 }
